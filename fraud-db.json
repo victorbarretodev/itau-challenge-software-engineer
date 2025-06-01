@@ -1,0 +1,12 @@
+{
+  "fraud": [
+    {
+      "id": "27173c00-1e21-4628-84c0-d9523dfae0c7",
+      "classification": "REGULAR"
+    },
+    {
+      "id": "de2e9078-a209-45ef-bba8-e5cc9b0d2809",
+      "classification": "HIGH_RISK"
+    }
+  ]
+}
