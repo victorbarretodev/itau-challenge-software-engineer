@@ -13,6 +13,16 @@ O projeto segue uma estrutura baseada em DDD e Clean Architecture, com separaç�
 - **Infrastructure**: acesso a dados, mensageria, clientes externos
 - **Interfaces**: controladores REST e DTOs
 
+![img_1.png](img_1.png)
+
+---
+
+### Decisões arquiteturais
+
+- Usei `UseCases` como ponto central da lógica de negócio, mantendo controllers finos e reusabilidade nas regras.
+- Integração com serviços externos (fraude) via HTTP Client isolado para facilitar testes e mock.
+- Utilização de eventos para atualizar status de forma assíncrona, simulando um ambiente real com RabbitMQ.
+
 ---
 
 ## 🚀 Funcionalidades
@@ -71,6 +81,18 @@ docker-compose up -d
 Serviços:
 - RabbitMQ: http://localhost:15672 (user/pass: guest/guest)
 - JSON Server (mock de fraude): http://localhost:3001/fraud
+> Para testar com a validação é preciso copiar o UUID gerado na criação da solicitação (POST) 
+> e após isso editar o fraud-db.json, cujo ultiliza os IDS para identificar a classificação, esse arquivo representa o serviço
+> externo.
+
+```json
+{
+      "id": "ID_RECEM_CRIADO",
+      "classification": "REGULAR" // REGULAR, HIGH_RISK, PREFERENTIAL, NO_INFORMATION
+}
+```
+
+é importante reiniciar o container do JSON server após atualizar o fraud-db.json
 
 ---
 
@@ -107,7 +129,8 @@ curl -X POST http://localhost:8080/events/status -H "Content-Type: application/j
 
 - Projeto foi construído com foco em clareza, separação de responsabilidades e cobertura total dos critérios do PDF do desafio.
 - Caso queira rodar testes: `./mvnw test`
-
+- Caso queira rodar o projeto pelo mvn `./mvnw spring-boot:run`
+- Ver relatório do Jacoco `open target/site/jacoco/index.html`
 ---
 
 ## 📂 Tecnologias
@@ -120,6 +143,16 @@ curl -X POST http://localhost:8080/events/status -H "Content-Type: application/j
 
 ---
 
-## Cobertura de Testes
+## 📊 Cobertura de Testes
 
 ![img.png](img.png)
+
+---
+
+## 📈 Pontos a melhorar
+
+- Implementar testes de integração para endpoints e filas
+- Autenticação/Autorização (não requerida, mas adicionaria segurança)
+- Externalizar as configurações dos serviços externos (fraude)
+- Padronizar DTOs com beans validados por anotações `@Valid`
+- Logging estruturado para rastreabilidade
